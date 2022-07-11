@@ -1,0 +1,292 @@
+{
+    "_version": "1.32.0",
+    "sap.app": {
+        "id": "demo.employee",
+        "type": "application",
+        "i18n": "i18n/i18n.properties",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "title": "{{appTitle}}",
+        "description": "{{appDescription}}",
+        "dataSources": {
+            "mainService": {
+                "uri": "/odata/v4/EmployeesService/",
+                "type": "OData",
+                "settings": {
+                    "annotations": [
+                        "annotation"
+                    ],
+                    "odataVersion": "4.0",
+                    "localUri": "localService/metadata.xml"
+                }
+            },
+            "annotation": {
+                "type": "ODataAnnotation",
+                "uri": "annotations/annotation.xml",
+                "settings": {
+                    "localUri": "annotations/annotation.xml"
+                }
+            }
+        },
+        "offline": false,
+        "resources": "resources.json",
+        "sourceTemplate": {
+            "id": "ui5template.fiorielements.v4.lrop",
+            "version": "1.0.0"
+        },
+        "crossNavigation": {
+            "inbounds": {
+            },
+            "outbounds":{
+                "SampleProject": {
+                    "semanticObject": "project1",
+                    "action": "display",
+                    "parameters":   {
+                        "preferredMode":{
+                            "required": true
+                        }
+                    }                 
+                }
+            }
+        }
+    },
+    "sap.ui": {
+        "technology": "UI5",
+        "icons": {
+            "icon": "",
+            "favIcon": "",
+            "phone": "",
+            "phone@2": "",
+            "tablet": "",
+            "tablet@2": ""
+        },
+        "deviceTypes": {
+            "desktop": true,
+            "tablet": true,
+            "phone": true
+        }
+    },
+    "sap.ui5": {
+        "resources": {
+            "js": [],
+            "css": []
+        },
+        "dependencies": {
+            "minUI5Version": "1.76.0",
+            "libs": {
+                "sap.ui.core": {},
+                "sap.fe.templates": {}
+            }
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "uri": "i18n/i18n.properties"
+            },
+            "": {
+                "dataSource": "mainService",
+                "preload": true,
+                "settings": {
+                    "synchronizationMode": "None",
+                    "operationMode": "Server",
+                    "autoExpandSelect": true,
+                    "earlyRequests": true
+                }
+            }
+        },
+        "routing": {
+            "routes": [
+                {
+                    "pattern": ":?query:",
+                    "name": "EmployeesList",
+                    "target": "EmployeesList"
+                },
+                {
+                    "pattern": "Employees({key}):?query:",
+                    "name": "EmployeesObjectPage",
+                    "target": "EmployeesObjectPage"
+                },
+                {
+                    "pattern": "Employees({key})/skills({key2}):?query:",
+                    "name": "SkillsObjectPage",
+                    "target": "SkillsObjectPage"
+                }
+            ],
+            "targets": {
+                "EmployeesList": {
+                    "type": "Component",
+                    "id": "EmployeesList",
+                    "name": "sap.fe.templates.ListReport",
+                    "options": {
+                        "settings": {
+                            "entitySet": "Employees",
+                            "enhanceI18n": "i18n/ListPage/i18n.properties", 
+                            "variantManagement": "Page",
+                            "navigation": {
+                                "Employees": {
+                                    "detail": {
+                                        "route": "EmployeesObjectPage"
+                                    }
+                                }
+                            },
+                            "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "actions": {
+                                        "customActionOne": {
+                                            "press": "demo.employee.Cusaction.onNavigationAction",
+                                            "text": "Navigation Action",
+                                            "visible":true                                         
+                                        }
+                                    },
+                                    "tableSettings": {
+                                        "type": "ResponsiveTable",
+                                        "quickVariantSelection": {
+                                            "paths": [
+                                                {
+                                                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionVariant#All"
+                                                },
+                                                {
+                                                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionVariant#Active"
+                                                },
+                                                {
+                                                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionVariant#New"
+                                                }
+                                            ],
+                                            "showCounts": false
+                                        }
+                                    },
+                                    "columns": {
+                                        "CustomColumnOnListPage": {
+                                            "header": "Buttons",
+                                            "position": {
+                                                "placement": "Before",
+                                                "anchor": "DataField::birthDate"
+                                            },
+                                            "template": "demo.employee.ext.CustomActionButton"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "EmployeesObjectPage": {
+                    "type": "Component",
+                    "id": "EmployeesObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "entitySet": "Employees",
+                            "enhanceI18n": "i18n/ObjectPage/i18n.properties",
+                            "navigation": {
+                                "skills": {
+                                    "detail": {
+                                        "route": "SkillsObjectPage"
+                                    }
+                                }
+                            },
+                            "editableHeaderContent": false,
+                            "content": {
+                                "header": {
+                                    "actions": {
+                                        "customSectionAction": {
+                                            "press": "demo.employee.Cusaction.onNavigationAction",
+                                            "visible": true,
+                                            "enabled": true,
+                                            "text": "Navigation Action",
+                                            "position": {
+                                                "placement": "After",
+                                                "anchor": "DataFieldForAction::EmployeesService.Activate"
+                                            }
+                                        }
+                                    }
+                                },
+                                "body": {
+                                    "sections": {
+                                        "CustomSection": {
+                                            "name": "demo.employee.ext.fragment.CustomSection",
+                                            "position": {
+                                                "anchor": "GeneralInformationFacet",
+                                                "placement": "After"
+                                            },
+                                            "type": "XMLFragment",
+                                            "title": "Custom Section"
+                                        }
+                                    }
+                                }
+                            },
+                            "sectionLayout": "Tabs",
+                            "controlConfiguration": {
+                                "@com.sap.vocabularies.UI.v1.FieldGroup#Admin": {
+                                    "actions": {
+                                      
+                                    }
+                                },
+                                "skills/@com.sap.vocabularies.UI.v1.LineItem": {
+                                    "tableSettings": {
+                                        "creationMode": {
+                                            "createAtEnd": false
+                                        }
+                                    },
+                                    "columns": {
+                                        "CustomColumnOnObjectPage": {
+                                            "header": "Buttons",
+                                            "position": {
+                                                "placement": "Before",
+                                                "anchor": "DataField::name"
+                                            },
+                                            "template": "demo.employee.ext.CustomActionButton"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "SkillsObjectPage": {
+                    "type": "Component",
+                    "id": "SkillsObjectPage",
+                    "name": "sap.fe.templates.ObjectPage",
+                    "options": {
+                        "settings": {
+                            "entitySet": "Skills",
+                            "navigation": {},
+                            "content": {}
+                        }
+                    }
+                }
+            }
+        },
+        "contentDensities": {
+            "compact": true,
+            "cozy": true
+        },
+        "extends": {
+            "extensions": {
+                "sap.ui.controllerExtensions": {
+                    "sap.fe.templates.ListReport.ListReportController": {
+                        "controllerName": "demo.employee.ext.controller.LRExtend"
+                    },
+                    "sap.fe.templates.ObjectPage.ObjectPageController": {
+                        "controllerName": "demo.employee.ext.controller.OPExtend"
+                    }
+                }
+            }
+        }
+    },
+    "sap.platform.abap": {
+        "_version": "1.1.0",
+        "uri": ""
+    },
+    "sap.platform.hcp": {
+        "_version": "1.1.0",
+        "uri": ""
+    },
+    "sap.fiori": {
+        "_version": "1.1.0",
+        "registrationIds": [],
+        "archeType": "transactional"
+    }
+}
+

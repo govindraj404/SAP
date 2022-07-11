@@ -1,0 +1,11 @@
+{
+    "build": {
+        "target": "."
+    },
+    "requires": {
+        "db": {
+            "kind": "sql"
+        }
+    }
+}
+

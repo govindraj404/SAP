@@ -1,0 +1,11 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
+	xmlns:cd="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
+
+<l:VerticalLayout core:require="{handler: 'demo/employee/Cusaction'}">
+<Button 
+      
+        text="Custom Button" press="handler.onNavigationAction" />
+	</l:VerticalLayout>
+
+     
+</core:FragmentDefinition>
